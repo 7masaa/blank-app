@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Elara Unified Workspace",
+  "description": "Single extension for snippets, tickets, and CS resources with role-based access.",
+  "version": "0.1.0",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://*.supabase.co/*",
+    "https://docs.google.com/*",
+    "https://affiliate.withelara.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "open_extension": {
+      "suggested_key": { "default": "Ctrl+Shift+E", "mac": "Command+Shift+E" },
+      "description": "Open unified extension"
+    },
+    "open_snippets": {
+      "suggested_key": { "default": "Ctrl+Shift+S", "mac": "Command+Shift+S" },
+      "description": "Open snippets tab"
+    },
+    "open_tickets": {
+      "suggested_key": { "default": "Ctrl+Shift+T", "mac": "Command+Shift+T" },
+      "description": "Open tickets tab"
+    },
+    "open_resources": {
+      "suggested_key": { "default": "Ctrl+Shift+R", "mac": "Command+Shift+R" },
+      "description": "Open resources tab"
+    }
+  }
+}

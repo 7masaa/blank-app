@@ -1,19 +1,42 @@
-# 🎈 Blank app template
+# Unified Role-Based Internal System
 
-A simple Streamlit app template for you to modify!
+A modernized Streamlit control hub with:
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
+- Role-based login and gated tooling
+- Embedded resource webviews (iframe-first)
+- Unified schema and migration SQL for one Supabase DB
+- Single-extension scaffold for snippets/tickets/resources
 
-### How to run it on your own machine
+## App file
 
-1. Install the requirements
+If your Streamlit Cloud app uses a renamed entrypoint (for example `internal_system_app.py`), set that path in Streamlit Cloud settings.
 
-   ```
-   $ pip install -r requirements.txt
-   ```
+Default entrypoint in this repo:
 
-2. Run the app
+- `streamlit_app.py`
 
-   ```
-   $ streamlit run streamlit_app.py
-   ```
+## Demo login
+
+All demo users use password: `demo1234`
+
+- `owner@withelara.com`
+- `salma@withelara.com`
+- `roaa@withelara.com`
+- `shelby@withelara.com`
+- `info@withelara.com`
+
+## Local run
+
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
+
+## Project structure
+
+- `streamlit_app.py` — upgraded hub UI and embedded webview resources
+- `database/01_unified_schema.sql` — unified DB schema + seeded resources
+- `database/02_seed_initial_users.sql` — seed template for initial users
+- `database/03_optional_migrate_data.sql` — optional migration helper
+- `extension/` — unified extension scaffold
+- `SETUP.md` — setup and rollout notes
