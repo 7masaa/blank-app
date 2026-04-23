@@ -126,30 +126,56 @@ def inject_styles() -> None:
     st.markdown(
         """
         <style>
-        .hero {padding: 1.25rem 1.5rem; border-radius: 16px; background: linear-gradient(120deg,#10223d,#1f3f73); color: white; margin-bottom: 1rem;}
-        .hero h1 {margin: 0; font-size: 2.2rem;}
-        .hero p {margin: .4rem 0 0 0; opacity: .9;}
-        .card {padding: 1rem; border: 1px solid rgba(160,160,180,.35); border-radius: 14px; background: rgba(18,22,34,.55); min-height: 160px;}
-        .badge {display:inline-block; padding: .2rem .55rem; border-radius: 999px; background: rgba(75,155,255,.2); color: #7fb6ff; font-size: .8rem; margin-bottom: .5rem;}
-        .tool {padding: .75rem 1rem; border-radius: 12px; margin: .4rem 0; background: rgba(20,26,42,.5);}
-        .ok {border-left: 4px solid #20c997;}
-        .lock {border-left: 4px solid #ff7676;}
+          .stApp {background: radial-gradient(1200px 600px at -10% -20%, #232935, #0f1115 60%);}
+          .block-container {padding-top: 1.2rem; padding-bottom: 2rem; max-width: 1180px;}
+          .apple-hero {
+            background: linear-gradient(135deg, rgba(255,255,255,.15), rgba(255,255,255,.03));
+            border: 1px solid rgba(255,255,255,.18);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 1.4rem 1.6rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,.28);
+            margin-bottom: 1rem;
+          }
+          .apple-hero h1 {font-size: 2.05rem; letter-spacing: -0.03em; margin: 0; color: #f5f5f7; font-weight: 640;}
+          .apple-hero p {margin: .35rem 0 0; color: #c8c8cf; font-size: 1rem;}
+          .toolbar {display:flex; gap:.55rem; flex-wrap:wrap; margin-top:.9rem;}
+          .pill {display:inline-flex; align-items:center; gap:.35rem; border-radius:999px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); color:#e6e6ee; padding:.32rem .7rem; font-size:.8rem;}
+          .glass {
+            border: 1px solid rgba(255,255,255,.12);
+            background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+            border-radius: 18px;
+            padding: .95rem;
+          }
+          .tool {border-left: 4px solid #4ade80; margin:.5rem 0; padding:.75rem .9rem; border-radius:12px; background:rgba(255,255,255,.04);}
+          .tool.locked {border-left-color:#fb7185;}
+          .tool h4 {margin:.05rem 0; color:#f3f4f6; font-weight:600;}
+          .tool p {margin:.1rem 0 0; color:#aeb1bd; font-size:.88rem;}
         </style>
         """,
         unsafe_allow_html=True,
     )
 
 
+def render_hero(title: str, subtitle: str, role: str | None = None) -> None:
+    badges = ""
+    if role:
+        badges = f'<div class="toolbar"><span class="pill">Role: {role}</span><span class="pill">Mode: Unified Workspace</span><span class="pill">Design: Apple-style</span></div>'
+    st.markdown(f'<div class="apple-hero"><h1>{title}</h1><p>{subtitle}</p>{badges}</div>', unsafe_allow_html=True)
+
+
 def show_login() -> None:
     inject_styles()
-    st.markdown('<div class="hero"><h1>Unified Role-Based Hub</h1><p>Single login for website, extension, and admin workflows.</p></div>', unsafe_allow_html=True)
+    render_hero("Unified Role-Based Hub", "Single login for website, extension, and admin workflows.")
+    col1, col2 = st.columns([1.8, 1])
 
-    col1, col2 = st.columns([2, 1])
     with col1:
+        st.markdown('<div class="glass">', unsafe_allow_html=True)
         with st.form("login"):
             email = st.text_input("Email").strip().lower()
             password = st.text_input("Password", type="password")
             submitted = st.form_submit_button("Sign in")
+        st.markdown('</div>', unsafe_allow_html=True)
 
         if submitted:
             user = DEMO_USERS.get(email)
@@ -157,17 +183,20 @@ def show_login() -> None:
                 st.session_state.user = user
                 st.rerun()
             st.error("Invalid credentials")
+
     with col2:
-        st.info("Demo password: `demo1234`")
-        st.caption("Try: owner@withelara.com or info@withelara.com")
+        st.markdown('<div class="glass">', unsafe_allow_html=True)
+        st.markdown("#### Demo access")
+        st.caption("Password for all demo accounts")
+        st.code("demo1234")
+        st.caption("owner@withelara.com")
+        st.caption("info@withelara.com")
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 def show_workspace(user: User) -> None:
     inject_styles()
-    st.markdown(
-        f'<div class="hero"><h1>Welcome, {user.full_name}</h1><p>Role: {user.role} • Unified workspace active</p></div>',
-        unsafe_allow_html=True,
-    )
+    render_hero(f"Welcome, {user.full_name}", "Internal control center for CS, affiliate, and leadership operations.", user.role)
 
     with st.sidebar:
         st.subheader("Session")
@@ -180,44 +209,43 @@ def show_workspace(user: User) -> None:
     tabs = st.tabs(["Dashboard", "Resources Webview", "System"])
 
     with tabs[0]:
-        st.subheader("Role-gated tools")
+        st.subheader("Access Matrix")
         tools = [
-            ("Snippets", "cs_agent"),
-            ("Ticketing", "cs_agent"),
-            ("Admin Dashboard", "admin"),
-            ("Leadership Analytics", "viewer"),
-            ("Contracts Calculator", "affiliate_manager"),
+            ("Snippets", "Use and manage approved snippets.", "cs_agent"),
+            ("Ticketing", "Create and triage operations tickets.", "cs_agent"),
+            ("Admin Dashboard", "Manage users, approvals, and settings.", "admin"),
+            ("Leadership Analytics", "Read-only leadership metrics and visibility.", "viewer"),
+            ("Contracts Calculator", "Affiliate pricing and contract workflows.", "affiliate_manager"),
         ]
-        for tool, min_role in tools:
+        for name, desc, min_role in tools:
             allowed = can_access(user.role, min_role)
-            css = "ok" if allowed else "lock"
-            label = "Accessible" if allowed else "Locked"
+            cls = "tool" if allowed else "tool locked"
+            state = "Accessible" if allowed else "Locked"
             st.markdown(
-                f'<div class="tool {css}"><strong>{tool}</strong> • {label} <span style="opacity:.7">(min role: {min_role})</span></div>',
+                f'<div class="{cls}"><h4>{name} · {state}</h4><p>{desc} (min role: {min_role})</p></div>',
                 unsafe_allow_html=True,
             )
 
     with tabs[1]:
-        st.subheader("Embedded resources (webview)")
+        st.subheader("Embedded Resources")
         visible = [r for r in RESOURCES if can_access(user.role, r["min_role"])]
-        names = [r["name"] for r in visible]
-        chosen_name = st.selectbox("Choose resource", names, index=0)
-        selected = next(r for r in visible if r["name"] == chosen_name)
+        selection = st.selectbox("Select resource", [r["name"] for r in visible])
+        selected = next(r for r in visible if r["name"] == selection)
 
-        c1, c2 = st.columns([2, 1])
-        with c1:
+        meta1, meta2 = st.columns([3, 2])
+        with meta1:
             st.markdown(f"### {selected['name']}")
             st.caption(selected["desc"])
-        with c2:
-            st.markdown(f"**Category:** {selected['category']}")
-            st.markdown(f"**Min role:** `{selected['min_role']}`")
+        with meta2:
+            st.caption(f"Category: {selected['category']}")
+            st.caption(f"Required role: {selected['min_role']}")
 
-        st.caption("If a provider blocks iframe rendering, use fallback open button below.")
-        components.iframe(selected["embed_url"], height=760, scrolling=True)
-        st.link_button("Open direct page (fallback)", selected["url"])
+        components.iframe(selected["embed_url"], height=780, scrolling=True)
+        st.caption("If this content is blocked by provider iframe policy, use direct fallback below.")
+        st.link_button("Open fallback page", selected["url"])
 
     with tabs[2]:
-        st.subheader("Implemented modules")
+        st.subheader("Platform modules")
         st.code(
             "\n".join(
                 [

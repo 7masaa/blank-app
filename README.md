@@ -1,8 +1,8 @@
 # Unified Role-Based Internal System
 
-A modernized Streamlit control hub with:
+A polished Apple-style Streamlit control hub with:
 
-- Role-based login and gated tooling
+- Role-based login and gated tooling with premium glassmorphism UI
 - Embedded resource webviews (iframe-first)
 - Unified schema and migration SQL for one Supabase DB
 - Single-extension scaffold for snippets/tickets/resources
