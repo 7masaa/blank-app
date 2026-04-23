@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unified Workspace</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Unified Workspace</h1>
+      <p id="role">Not signed in</p>
+    </header>
+
+    <nav>
+      <button data-tab="snippets">Snippets</button>
+      <button data-tab="tickets">Tickets</button>
+      <button data-tab="resources">Resources</button>
+      <button data-tab="account">Account</button>
+    </nav>
+
+    <main>
+      <section id="snippets" class="tab">Snippet tools go here.</section>
+      <section id="tickets" class="tab">Ticket tools go here.</section>
+      <section id="resources" class="tab">Resource links go here.</section>
+      <section id="account" class="tab">Unified auth session status goes here.</section>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
