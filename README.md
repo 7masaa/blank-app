@@ -1,24 +1,42 @@
-# Unified Role-Based Platform Foundation
+# Unified Role-Based Internal System
 
-This repo now contains a practical foundation for the system you requested:
+A modernized Streamlit control hub with:
 
-- **One DB schema** for users, sessions, snippets, tickets, resources, config, and audit
-- **One role model** (`super_admin`, `admin`, `cs_lead`, `cs_agent`, `affiliate_manager`, `it`, `engineering`, `viewer`)
-- **One login concept** shared across hub and extension
-- **One extension scaffold** with keyboard shortcuts and tabbed popup
-- **One role-gated hub demo** implemented in Streamlit
+- Role-based login and gated tooling
+- Embedded resource webviews (iframe-first)
+- Unified schema and migration SQL for one Supabase DB
+- Single-extension scaffold for snippets/tickets/resources
 
-## Repository layout
+## App file
 
-- `database/01_unified_schema.sql` - unified schema + seeded CS resource links
-- `database/02_seed_initial_users.sql` - initial users to recreate accounts in new DB
-- `database/03_optional_migrate_data.sql` - hybrid migration helper for snippets/tickets
-- `extension/*` - single-extension scaffold (manifest, background, popup)
-- `streamlit_app.py` - role-based login + resource access demo
-- `SETUP.md` - deployment and rollout steps
+If your Streamlit Cloud app uses a renamed entrypoint (for example `internal_system_app.py`), set that path in Streamlit Cloud settings.
 
-## Run the hub demo
+Default entrypoint in this repo:
+
+- `streamlit_app.py`
+
+## Demo login
+
+All demo users use password: `demo1234`
+
+- `owner@withelara.com`
+- `salma@withelara.com`
+- `roaa@withelara.com`
+- `shelby@withelara.com`
+- `info@withelara.com`
+
+## Local run
 
 ```bash
 pip install -r requirements.txt
 streamlit run streamlit_app.py
+```
+
+## Project structure
+
+- `streamlit_app.py` — upgraded hub UI and embedded webview resources
+- `database/01_unified_schema.sql` — unified DB schema + seeded resources
+- `database/02_seed_initial_users.sql` — seed template for initial users
+- `database/03_optional_migrate_data.sql` — optional migration helper
+- `extension/` — unified extension scaffold
+- `SETUP.md` — setup and rollout notes
